@@ -1,0 +1,77 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2020-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+use Magento\Customer\Block\Form\Login\Info;
+use Magento\Framework\Escaper;
+use Hyva\Checkout\Model\Navigation\Checkout;
+use Hyva\Checkout\ViewModel\Navigation;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+/** @var Info $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+
+$navHtmlRight = $block->getChildHtml('hyva.checkout.navigation.right');
+$viewModel = $viewModels->require(Navigation::class);
+$navigator = $viewModel->getNavigator();
+$checkout  = $navigator->getActiveCheckout();
+?>
+<?php if ($checkout->hasSteps() && $checkout->isMultiStepper()): ?>
+<?php $previous = $checkout->getStepBefore($navigator->getActiveStep()) ?>
+<?php $next = $checkout->getStepAfter($navigator->getActiveStep()) ?>
+<?php endif; ?>
+<?php if ($block->getRegistration()->isAllowed()): ?>
+    <div class="block-new-customer card">
+        <div class="block-title">
+            <h2 class="text-xl font-medium title-font mb-3 text-primary" role="heading"
+                aria-level="2"><?= $escaper->escapeHtml(__('New Customers')) ?></h2>
+        </div>
+        <div class="block-content" aria-labelledby="block-new-customer-heading">
+            <p>
+                <?= $escaper->escapeHtml( // phpcs:disable Generic.Files.LineLength.TooLong
+                    __('Creating an account has many benefits: check out faster, keep more than one address, track orders and more.')
+                ) // phpcs:enable ?>
+            </p>
+        </div>
+        <div class="field email required">
+            <label class="label" for="email">
+                <span>Email</span>
+            </label>
+            <div class="control">
+                <input name="login[username]" value="<?= $block->escapeHtmlAttr($block->getUsername()) ?>"
+                       autocomplete="on"
+                       id="email" type="email" class="input-text"
+                       title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
+                       data-mage-init='{"mage/trim-input":{}}'
+                       data-validate="{required:true, 'validate-email':true}">
+            </div>
+        </div>
+        <div class="actions-toolbar pt-6 pb-2 flex self-end">
+            <nav x-data="Object.assign(initCheckoutNavigation(), initNavigation())"
+                 x-init="initialize()"
+                 class="nav-main md:mb-0 overflow-hidden rounded-lg  p-2"
+            >
+
+                <button type="button"
+                        rel="next"
+                        class="underline text-secondary"
+                        x-spread="buttonNext('<?= $escaper->escapeJs($next->getRoute()) ?>')"
+                        x-bind="buttonNext('<?= $escaper->escapeJs($next->getRoute()) ?>')"
+                >
+                    <?= $escaper->escapeHtml(__('Continue as guest')) ?>
+                </button>
+            </nav>
+            <a href="<?= $escaper->escapeUrl($block->getCreateAccountUrl()) ?>"
+               class="btn btn-primary"><span><?= $escaper->escapeHtml(__('Create an Account')) ?></span></a>
+
+        </div>
+    </div>
+<?php endif; ?>

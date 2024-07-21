@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Hyva_Checkout:etc/hyva_checkout.xsd"
+>
+    <!-- Acme Changes  -->
+    <checkout name="default"
+              label="Hyvä Default"
+              layout="2columns"
+    >
+        <step name="login"
+              label="Customer Login"
+              route="login"
+              layout="1column"
+        >
+            <!-- Show login step when guest checkout is not allowed -->
+            <condition name="is_customer_required" if="is_customer" method="required"/>
+            <!-- Show login step when the current customer is actually a guest -->
+            <condition name="is_guest" if="is_guest"/>
+        </step>
+        <step name="login_checkpoint"
+              label="Customer Login"
+              route="login"
+              layout="1column"
+              after="login"
+        >
+            <!-- Show login step when guest checkout is not allowed -->
+<!--            <condition name="is_customer_required" if="is_customer" method="required"/>-->
+            <!-- Show login step when the current customer is actually a guest -->
+            <condition name="is_guest" if="is_guest"/>
+        </step>
+
+        <step name="shipping"
+              label="Shipping"
+              route="shipping"
+        >
+            <!-- Only show this step when the cart isn't fully virtual -->
+            <condition name="is_physical" if="is_physical"/>
+
+            <update handle="hyva_checkout_default_customer" if="is_customer"/>
+        </step>
+
+        <step name="payment"
+              label="Review &amp; Payments"
+              route="payment"
+        >
+            <!-- Remove all the stuff related to shipping when the cart is fully virtual -->
+            <update handle="hyva_checkout_default_virtual" if="is_virtual"/>
+        </step>
+    </checkout>
+</config>
