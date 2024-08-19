@@ -51,7 +51,11 @@ $checkout  = $navigator->getActiveCheckout();
                        id="email" type="email" class="input-text"
                        title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
                        data-mage-init='{"mage/trim-input":{}}'
-                       data-validate="{required:true, 'validate-email':true}">
+                       data-validate="{required:true, 'validate-email':true}"
+                       x-data="{email: ''}"
+                       @input=" () => {window.sharedStorage.email_address = $event.target.value}">
+
+
             </div>
         </div>
         <div class="actions-toolbar pt-6 pb-2 flex self-end">

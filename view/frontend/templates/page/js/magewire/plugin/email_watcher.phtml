@@ -1,0 +1,14 @@
+<script>
+    'use strict'
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!Magewire) {
+                document.addEventListener('checkout:init:shipping', () => {
+                    // document.addEventListener('magewire:load', () => {
+                Magewire.find("checkout.guest-details").set('data.email_address', window.sharedStorage.email_address);
+                })
+        }
+        }else{
+            Magewire.find("checkout.guest-details").set('data.email_address', window.sharedStorage.email_address);
+        }
+    })
+</script>
